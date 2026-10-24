@@ -17,19 +17,45 @@ A GitHub-ready reference implementation for an AI-assisted L1 production-support
 
 ```mermaid
 flowchart TD
-    A[Email / Summit ITSM] --> B[API and request validation]
-    B --> C[Ticket triage and policy checks]
-    C --> D[Knowledge retrieval]
-    D --> E[Response draft]
-    E --> F{Action or reply requires approval?}
-    F -- Yes --> G[Human approval queue]
-    F -- No, policy explicitly permits --> H[Controlled dispatch]
-    G --> I[Approve / edit / reject / escalate]
-    I --> H
-    H --> J[Audit events]
-    D -. AWS target .-> K[Bedrock Knowledge Bases]
-    K --> L[Titan Text Embeddings V2]
-    L --> M[Configured vector store]
+    A["Email / Summit ITSM<br/>Ticket intake"]
+    B["API and Request Validation<br/>Schema, required fields, allowlists"]
+    C["Ticket Triage and Classification<br/>Category, severity, application"]
+    D["Knowledge Retrieval<br/>Relevant SOPs, runbooks, incidents"]
+    E["Response Draft<br/>Evidence-backed recommendation"]
+    F{"Action or reply<br/>requires approval?"}
+    G["Human Approval<br/>Review and authorization"]
+    I["Approve / Edit / Reject"]
+    H["Controlled Dispatch<br/>Permitted email / ITSM / API action"]
+    N["Policy-Permitted Response<br/>No sensitive mutation; reply only"]
+    J["Audit Events<br/>Decision, evidence, approval, outcome"]
+
+    A --> B --> C --> D --> E --> F
+    F -- "Yes" --> G
+    G --> I
+    I -- "Approved" --> H
+    I -- "Rejected / returned" --> N
+    F -- "No — policy explicitly permits" --> N
+    H --> J
+    N --> J
+
+    subgraph AWS["AWS Knowledge Layer — Target Architecture"]
+        K["Amazon Bedrock Knowledge Bases"]
+        L["Titan Text Embeddings V2"]
+        M["Choose ONE configured vector store<br/>OpenSearch Serverless OR S3 Vectors<br/>OR Aurora PostgreSQL / pgvector"]
+        K --> L --> M
+    end
+
+    D -. "Retrieval / ingestion" .-> K
+
+    classDef workflow fill:#F1F0FF,stroke:#7867B7,color:#202040,stroke-width:1.5px
+    classDef decision fill:#E8E5FF,stroke:#7867B7,color:#202040,stroke-width:1.5px
+    classDef aws fill:#FFF4E5,stroke:#C78A32,color:#402B10,stroke-width:1.5px
+    classDef audit fill:#E7F5EC,stroke:#4B8B69,color:#173D27,stroke-width:1.5px
+
+    class A,B,C,D,E,G,H,I,N workflow
+    class F decision
+    class K,L,M aws
+    class J audit
 ```
 
 ## Quick start
