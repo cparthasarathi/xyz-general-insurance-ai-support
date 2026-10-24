@@ -18,6 +18,7 @@ A GitHub-ready reference implementation for an AI-assisted L1 production-support
 
 The diagram below illustrates the AI-assisted production-support workflow, human approval controls, audit trail, and target AWS knowledge architecture.
 
+![XYZ General Insurance AI Support Architecture](docs/ai-support-architecture.png)
 
 
 ## Quick start
