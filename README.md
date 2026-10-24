@@ -16,40 +16,7 @@ A GitHub-ready reference implementation for an AI-assisted L1 production-support
 
 ## Architecture
 
-```mermaid
-
-flowchart TD
-    A["Email / Summit ITSM - Ticket Intake"]
-    B["API Request Validation"]
-    C["Ticket Triage and Policy Checks"]
-    D["Knowledge Retrieval"]
-    E["Evidence-Based Response Draft"]
-    F{"Approval Required?"}
-    G["Human Approval and Review"]
-    H["Approve, Edit, Reject or Escalate"]
-    I["Controlled Dispatch"]
-    J["Policy-Permitted Reply"]
-    N["Audit Events"]
-
-    A --> B --> C --> D --> E --> F
-    F -- Yes --> G
-    G --> H
-    H -- Approved --> I
-    H -- Rejected --> J
-    F -- No, policy permits --> J
-    I --> N
-    J --> N
-
-    subgraph AWS["AWS Knowledge Layer - Target"]
-        K["Amazon Bedrock Knowledge Bases"]
-        L["Titan Text Embeddings V2"]
-        M["Configured Vector Store"]
-        K --> L --> M
-    end
-
-    D -. Retrieval .-> K
-```
-
+The diagram below illustrates the AI-assisted production-support workflow, human approval controls, audit trail, and target AWS knowledge architecture.
 
 
 
