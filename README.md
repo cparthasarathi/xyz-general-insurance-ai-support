@@ -13,60 +13,44 @@ A GitHub-ready reference implementation for an AI-assisted L1 production-support
 
 > **Implementation status:** This is a local runnable reference scaffold. The local retriever uses lexical scoring, not embeddings. AWS services and live Summit ITSM/BaNCS/email integrations are represented as documented integration seams and are not connected by default. Do not describe this repository as a production deployment.
 
+
 ## Architecture
 
----
-config:
-  htmlLabels: false
----
-flowchart TD
-    A("`Email / Summit ITSM
-    Ticket intake`")
-    B("`API validation
-    Required fields and allowlists`")
-    C("`Ticket triage
-    Category and severity`")
-    D("`Knowledge retrieval
-    SOPs, runbooks, incidents`")
-    E("`Draft response
-    Evidence-based recommendation`")
-    F{"`Approval required?`"}
-    G("`Human review
-    Approve, edit or reject`")
-    H("`Controlled dispatch
-    Approved email, ITSM or API`")
-    I("`Policy-permitted reply
-    No sensitive mutation`")
-    J("`Audit events
-    Decisions and outcomes`")
+```mermaid
 
-    subgraph AWS["AWS Knowledge Layer - Target"]
-        K("`Bedrock Knowledge Bases`")
-        L("`Titan Text Embeddings V2`")
-        M("`Choose ONE vector store
-        OpenSearch Serverless
-        S3 Vectors or Aurora pgvector`")
-        K --> L --> M
-    end
+flowchart TD
+    A["Email / Summit ITSM - Ticket Intake"]
+    B["API Request Validation"]
+    C["Ticket Triage and Policy Checks"]
+    D["Knowledge Retrieval"]
+    E["Evidence-Based Response Draft"]
+    F{"Approval Required?"}
+    G["Human Approval and Review"]
+    H["Approve, Edit, Reject or Escalate"]
+    I["Controlled Dispatch"]
+    J["Policy-Permitted Reply"]
+    N["Audit Events"]
 
     A --> B --> C --> D --> E --> F
     F -- Yes --> G
-    G -- Approved --> H
-    G -- Rejected --> I
-    F -- No --> I
-    H --> J
-    I --> J
+    G --> H
+    H -- Approved --> I
+    H -- Rejected --> J
+    F -- No, policy permits --> J
+    I --> N
+    J --> N
+
+    subgraph AWS["AWS Knowledge Layer - Target"]
+        K["Amazon Bedrock Knowledge Bases"]
+        L["Titan Text Embeddings V2"]
+        M["Configured Vector Store"]
+        K --> L --> M
+    end
+
     D -. Retrieval .-> K
+```
 
-    classDef process fill:#F1F0FF,stroke:#7867B7,color:#202040
-    classDef decision fill:#E8E5FF,stroke:#7867B7,color:#202040
-    classDef cloud fill:#FFF4E5,stroke:#C78A32,color:#402B10
-    classDef audit fill:#E7F5EC,stroke:#4B8B69,color:#173D27
 
-    class A,B,C,D,E,G,H,I process
-    class F decision
-    class K,L,M cloud
-    class J audit
 
 
 ## Quick start
