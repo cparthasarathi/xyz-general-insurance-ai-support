@@ -15,48 +15,58 @@ A GitHub-ready reference implementation for an AI-assisted L1 production-support
 
 ## Architecture
 
-```mermaid
+---
+config:
+  htmlLabels: false
+---
 flowchart TD
-    A["Email / Summit ITSM<br/>Ticket intake"]
-    B["API and Request Validation<br/>Schema, required fields, allowlists"]
-    C["Ticket Triage and Classification<br/>Category, severity, application"]
-    D["Knowledge Retrieval<br/>Relevant SOPs, runbooks, incidents"]
-    E["Response Draft<br/>Evidence-backed recommendation"]
-    F{"Action or reply<br/>requires approval?"}
-    G["Human Approval<br/>Review and authorization"]
-    I["Approve / Edit / Reject"]
-    H["Controlled Dispatch<br/>Permitted email / ITSM / API action"]
-    N["Policy-Permitted Response<br/>No sensitive mutation; reply only"]
-    J["Audit Events<br/>Decision, evidence, approval, outcome"]
+    A("`Email / Summit ITSM
+    Ticket intake`")
+    B("`API validation
+    Required fields and allowlists`")
+    C("`Ticket triage
+    Category and severity`")
+    D("`Knowledge retrieval
+    SOPs, runbooks, incidents`")
+    E("`Draft response
+    Evidence-based recommendation`")
+    F{"`Approval required?`"}
+    G("`Human review
+    Approve, edit or reject`")
+    H("`Controlled dispatch
+    Approved email, ITSM or API`")
+    I("`Policy-permitted reply
+    No sensitive mutation`")
+    J("`Audit events
+    Decisions and outcomes`")
 
-    A --> B --> C --> D --> E --> F
-    F -- "Yes" --> G
-    G --> I
-    I -- "Approved" --> H
-    I -- "Rejected / returned" --> N
-    F -- "No — policy explicitly permits" --> N
-    H --> J
-    N --> J
-
-    subgraph AWS["AWS Knowledge Layer — Target Architecture"]
-        K["Amazon Bedrock Knowledge Bases"]
-        L["Titan Text Embeddings V2"]
-        M["Choose ONE configured vector store<br/>OpenSearch Serverless OR S3 Vectors<br/>OR Aurora PostgreSQL / pgvector"]
+    subgraph AWS["AWS Knowledge Layer - Target"]
+        K("`Bedrock Knowledge Bases`")
+        L("`Titan Text Embeddings V2`")
+        M("`Choose ONE vector store
+        OpenSearch Serverless
+        S3 Vectors or Aurora pgvector`")
         K --> L --> M
     end
 
-    D -. "Retrieval / ingestion" .-> K
+    A --> B --> C --> D --> E --> F
+    F -- Yes --> G
+    G -- Approved --> H
+    G -- Rejected --> I
+    F -- No --> I
+    H --> J
+    I --> J
+    D -. Retrieval .-> K
 
-    classDef workflow fill:#F1F0FF,stroke:#7867B7,color:#202040,stroke-width:1.5px
-    classDef decision fill:#E8E5FF,stroke:#7867B7,color:#202040,stroke-width:1.5px
-    classDef aws fill:#FFF4E5,stroke:#C78A32,color:#402B10,stroke-width:1.5px
-    classDef audit fill:#E7F5EC,stroke:#4B8B69,color:#173D27,stroke-width:1.5px
+    classDef process fill:#F1F0FF,stroke:#7867B7,color:#202040
+    classDef decision fill:#E8E5FF,stroke:#7867B7,color:#202040
+    classDef cloud fill:#FFF4E5,stroke:#C78A32,color:#402B10
+    classDef audit fill:#E7F5EC,stroke:#4B8B69,color:#173D27
 
-    class A,B,C,D,E,G,H,I,N workflow
+    class A,B,C,D,E,G,H,I process
     class F decision
-    class K,L,M aws
+    class K,L,M cloud
     class J audit
-```
 
 ## Quick start
 
