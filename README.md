@@ -13,7 +13,6 @@ A GitHub-ready reference implementation for an AI-assisted L1 production-support
 
 > **Implementation status:** This is a local runnable reference scaffold. The local retriever uses lexical scoring, not embeddings. AWS services and live Summit ITSM/BaNCS/email integrations are represented as documented integration seams and are not connected by default. Do not describe this repository as a production deployment.
 
-
 ## Architecture
 
 The diagram below illustrates the AI-assisted production-support workflow, human approval controls, audit trail, and target AWS knowledge architecture.
