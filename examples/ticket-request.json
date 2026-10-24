@@ -1,0 +1,7 @@
+{
+  "ticket_id": "DEMO-1001",
+  "subject": "Payment status inquiry",
+  "description": "How do I check whether a payment request completed?",
+  "application": "PolicyAdmin",
+  "error_code": null
+}
